@@ -7,10 +7,10 @@ import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 
 const LandingPage = lazy(() => import('@/pages/common/LandingPage'))
-
 const LoginForm = lazy(() => import('@/components/auth/LoginForm'))
-
 const Dashboard = lazy(() => import('@/components/user/Dashboard'))
+const Tickets = lazy(() => import('@/components/user/Tickets'))
+const Account = lazy(() => import('@/components/user/Account'))
 
 
 const router = createBrowserRouter([
@@ -57,7 +57,23 @@ const router = createBrowserRouter([
                         <Dashboard />
                     </Suspense>
                 )
-            }
+            },
+            {
+                path: 'tickets',
+                element: (
+                    <Suspense fallback={<LoadingPage />}>
+                        <Tickets />
+                    </Suspense>
+                )
+            },
+            {
+                path: 'account',
+                element: (
+                    <Suspense fallback={<LoadingPage />}>
+                        <Account />
+                    </Suspense>
+                )
+            },
         ]
     }
 ])
