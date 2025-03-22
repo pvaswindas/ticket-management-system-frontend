@@ -12,10 +12,10 @@ function Logo() {
       onClick={() => navigate('/dashboard')}
     >
       <div className="w-10 h-10">
-        <img src={Icon} alt="AssistPoint" />
+        <img src={Icon} alt="TicSol" />
       </div>
       <div className="w-10">
-        <img src={TICSOL} alt="TIKSOL" />
+        <img src={TICSOL} alt="TicSol" />
       </div>
     </div>
   );
