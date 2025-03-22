@@ -1,1 +1,41 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-github: #24292d;
+  --color-github-dark: #0D1117;
+  --color-jungle-green: #0e9b8b;
+  --color-dark-jungle-green: #0b9588;
+  --color-deep-teal: #166d5c
+}
+
+/* Hide scrollbar for all browsers */
+html, body, #root {
+  height: 100%;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+* {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+/* Set background color to match your theme to prevent white flash */
+body {
+  background-color: var(--color-github-dark, #0D1117);
+}
+
+/* Ensure content doesn't exceed viewport height */
+#root {
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
