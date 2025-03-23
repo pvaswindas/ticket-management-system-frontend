@@ -1,9 +1,19 @@
 import React from 'react'
+import HeroSection from '../../components/landing/HeroSection';
+import FeaturesSection from '../../components/landing/FeaturesSection';
+import IntegrationSection from '../../components/landing/IntegrationSection';
+import ContactSection from '../../components/landing/ContactSection';
+import Footer from '../../components/landing/Footer';
+
 
 function LandingPage() {
   return (
-    <div className='bg-gradient-to-b from-jungle-green via-deep-teal to-github-dark min-h-screen flex items-center justify-center'>
-      LandingPage
+    <div className="min-h-screen bg-gradient-to-tr from-github-dark to-charcoal-gray overflow-y-auto">
+      <HeroSection />
+      <FeaturesSection />
+      <IntegrationSection />
+      <ContactSection />
+      <Footer />
     </div>
   )
 }

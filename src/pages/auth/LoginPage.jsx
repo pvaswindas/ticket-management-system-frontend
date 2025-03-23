@@ -3,10 +3,10 @@ import { useForm } from 'react-hook-form';
 // eslint-disable-next-line no-unused-vars
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { loginUser } from '../../api/auth/auth';
-import AlertSnackbar from '../AlertSnackbar';
+import { loginUser } from '@/services/auth/auth';
+import AlertSnackbar from '../../components/AlertSnackbar';
 
-const LoginForm = () => {
+const LoginPage = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -18,7 +18,6 @@ const LoginForm = () => {
     
     try {
       const response = await loginUser(data)
-      console.log("RESPONSE :", response)
       const { access, refresh, role } = response.data;
       
       // Store tokens and navigate
@@ -31,7 +30,6 @@ const LoginForm = () => {
       }
       
     } catch (err) {
-      console.error('Login error:', err.response?.data || err.message);
       
       let errorMessage = 'Login failed. Please try again.';
       
@@ -89,7 +87,7 @@ const LoginForm = () => {
 
   return (
     <motion.div 
-      className="flex items-center lg:w-full lg:py-10 justify-center"
+      className="flex items-center md:w-full md:py-10 justify-center"
       initial="hidden"
       animate="visible"
       variants={containerVariants}
@@ -197,4 +195,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LoginPage;

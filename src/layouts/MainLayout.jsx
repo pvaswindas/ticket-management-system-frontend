@@ -1,45 +1,63 @@
 import { Outlet } from "react-router-dom"
-import Sidebar from "../components/user/Sidebar"
-import { useState } from "react"
-import Navbar from "../components/user/Navbar"
+import Sidebar from "../components/user/navigation/Sidebar"
+import { useState, useEffect } from "react"
+import Navbar from "../components/user/navigation/Navbar"
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"
+import BottomBar from "../components/user/navigation/BottomBar"
 
 function MainLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+    const [isLargeScreen, setIsLargeScreen] = useState(false)
 
-  return (
-    <div className='bg-github min-h-screen flex'>
-      <AnimatePresence>
-        {isSidebarOpen && (
-          <motion.div 
-            className="hidden lg:flex lg:w-1/6"
-            initial={{ x: -300, opacity: 0 }}
-            animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -300, opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-          >
-            <Sidebar />
-          </motion.div>
-        )}
-      </AnimatePresence>
+    useEffect(() => {
+      const checkScreenSize = () => {
+        setIsLargeScreen(window.innerWidth >= 1024)
+      }
       
-      <motion.div 
-        className="flex flex-col p-6"
-        animate={{ 
-          width: isSidebarOpen ? '83.333333%' : '100%' 
-        }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      >
-        <div>
-          <Navbar setIsSidebarOpen={setIsSidebarOpen} />
+      checkScreenSize()
+      
+      window.addEventListener('resize', checkScreenSize)
+      
+      // Cleanup
+      return () => window.removeEventListener('resize', checkScreenSize)
+    }, [])
+
+    return (
+      <div className="bg-github min-h-screen w-full overflow-y-auto">
+        <AnimatePresence>
+          {isSidebarOpen && (
+            <motion.div 
+              className="fixed top-0 left-0 w-1/6 h-screen z-30 hidden lg:block"
+              initial={{ x: -300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Sidebar />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        
+        <div 
+          className={`min-h-screen ${isLargeScreen && isSidebarOpen ? 'md:pl-1/6' : ''}`}
+          style={{
+            paddingLeft: isLargeScreen && isSidebarOpen ? 'calc(16.666667%)' : '0px'
+          }}
+        >
+          <div className="p-6">
+            <Navbar setIsSidebarOpen={setIsSidebarOpen} />
+            <div className="py-2 pb-20 md:pb-6">
+              <Outlet />
+            </div>
+          </div>
         </div>
-        <div className="py-6">
-          <Outlet />
+        
+        <div className="fixed bottom-0 left-0 w-full lg:hidden z-30">
+          <BottomBar />
         </div>
-      </motion.div>
-    </div>
-  )
+      </div>
+    )
 }
 
 export default MainLayout

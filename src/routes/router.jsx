@@ -7,10 +7,11 @@ import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 
 const LandingPage = lazy(() => import('@/pages/common/LandingPage'))
-const LoginForm = lazy(() => import('@/components/auth/LoginForm'))
-const Dashboard = lazy(() => import('@/components/user/Dashboard'))
-const Tickets = lazy(() => import('@/components/user/Tickets'))
-const Account = lazy(() => import('@/components/user/Account'))
+const LoginPage = lazy(() => import('@/pages/auth/LoginPage'))
+const Dashboard = lazy(() => import('@/pages/user/Dashboard'))
+const CreateTicket = lazy(() => import('@/pages/user/CreateTicket'))
+const ManageTickets = lazy(() => import('@/pages/user/ManageTickets'))
+const TicketDetail = lazy(() => import('@/pages/user/TicketDetail'))
 
 
 const router = createBrowserRouter([
@@ -19,7 +20,9 @@ const router = createBrowserRouter([
         path: '/',
         element: (
             <Suspense fallback={<LoadingPage />} >
-                <LandingPage />
+                <RestrictedRoute>
+                    <LandingPage />
+                </RestrictedRoute>
             </Suspense>
         )
     },
@@ -36,7 +39,7 @@ const router = createBrowserRouter([
                 path: 'login',
                 element: (
                     <Suspense fallback={<LoadingPage />} >
-                        <LoginForm />
+                        <LoginPage />
                     </Suspense>
                 )
             },
@@ -59,18 +62,26 @@ const router = createBrowserRouter([
                 )
             },
             {
-                path: 'tickets',
+                path: 'create-tickets',
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <Tickets />
+                        <CreateTicket />
                     </Suspense>
                 )
             },
             {
-                path: 'account',
+                path: 'tickets',
                 element: (
                     <Suspense fallback={<LoadingPage />}>
-                        <Account />
+                        <ManageTickets />
+                    </Suspense>
+                )
+            },
+            {
+                path: 'tickets/:id',
+                element: (
+                    <Suspense fallback={<LoadingPage />}>
+                        <TicketDetail />
                     </Suspense>
                 )
             },
