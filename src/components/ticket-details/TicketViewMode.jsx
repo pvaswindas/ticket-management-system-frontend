@@ -1,6 +1,6 @@
 import React from 'react';
-import StatusPill from '@/components/user/manage-tickets/StatusPill';
-import PriorityIndicator from '@/components/user/manage-tickets/PriorityIndicator';
+import StatusPill from '@/components/common/manage-tickets/StatusPill';
+import PriorityIndicator from '@/components/common/manage-tickets/PriorityIndicator';
 import TicketActions from './TicketActions';
 
 const TicketViewMode = ({ 

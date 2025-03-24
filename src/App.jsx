@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Routes } from "./routes/router";
+import { AuthProvider } from './context/AuthContext.jsx';
 
 function App() {
   useEffect(() => {
@@ -14,7 +15,12 @@ function App() {
     };
   }, []);
 
-  return <Routes />;
+  return (
+    <AuthProvider>
+      <Routes />
+    </AuthProvider>
+  );
+
 }
 
 export default App;

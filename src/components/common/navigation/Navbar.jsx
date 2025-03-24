@@ -1,18 +1,18 @@
 import React from 'react'
 import { Menu, LogOut } from 'lucide-react'
-import { useLocation, useNavigate } from 'react-router-dom'
-import { logoutUser } from "@/services/auth/auth"
-import { getPageTitle } from '../../../utils/pageNavUtils'
+import { useLocation } from 'react-router-dom'
+import { getPageTitle } from '@/utils/pageNavUtils'
+import { useAuth } from '@/context/AuthContext';
 
 function Navbar({ setIsSidebarOpen, isAdmin }) {
-    const navigate = useNavigate()
+    const { logout } = useAuth();
     const location = useLocation();
     
     const currentPage = getPageTitle({ location, isAdmin });
 
     const handleLogout = () => {
-        logoutUser(navigate);
-    }
+        logout();
+    };
 
     return (
         <div className='flex w-full items-center justify-between'>

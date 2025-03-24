@@ -2,14 +2,22 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PriorityIndicator from '../manage-tickets/PriorityIndicator';
 import StatusPill from '../manage-tickets/StatusPill';
-import { formatDate } from '../../../utils/formats';
+import { formatDate } from '@/utils/formats';
 
-function TicketTable({ tickets }) {
+function TicketTable({ tickets, isAdmin=false }) {
   const [expandedTicket, setExpandedTicket] = useState(null);
   const navigate = useNavigate()
 
+  const handleDetailView = (ticketId) => {
+    if (isAdmin) {
+      navigate(`/admin/tickets/${ticketId}`);
+    } else {
+      navigate(`/tickets/${ticketId}`);
+    }
+  };
+  
 
-  // Toggle expanded view for mobile
+
   const toggleExpand = (id) => {
     setExpandedTicket(expandedTicket === id ? null : id);
   };
@@ -48,7 +56,7 @@ function TicketTable({ tickets }) {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
                     <button 
                       className="text-jungle-green hover:text-dark-jungle-green mr-3 cursor-pointer"
-                      onClick={() => navigate(`/tickets/${ticket.id}`)}
+                      onClick={() => handleDetailView(ticket.id)}
                     >
                       View
                     </button>
@@ -108,7 +116,7 @@ function TicketTable({ tickets }) {
                     <div className="col-span-2 mt-3 flex space-x-3">
                       <button
                         className="text-jungle-green hover:text-dark-jungle-green"
-                        onClick={() => navigate(`/tickets/${ticket.id}`)}
+                        onClick={() => handleDetailView(ticket.id)}
                       >
                         View
                       </button>

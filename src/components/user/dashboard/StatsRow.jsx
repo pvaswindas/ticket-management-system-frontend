@@ -1,31 +1,24 @@
 import React from 'react';
-import StatCard from './StatCard';
 
-function StatsRow({ tickets }) {
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-      <StatCard 
-        title="Total Tickets" 
-        count={tickets.length} 
-        color="text-gray-200"
-      />
-      <StatCard 
-        title="Open Tickets" 
-        count={tickets.filter(t => t.status === 'open').length} 
-        color="text-jungle-green"
-      />
-      <StatCard 
-        title="In Progress" 
-        count={tickets.filter(t => t.status === 'in-progress').length} 
-        color="text-dark-jungle-green"
-      />
-      <StatCard 
-        title="Resolved" 
-        count={tickets.filter(t => t.status === 'resolved').length} 
-        color="text-deep-teal"
-      />
+const StatsRow = ({ userStats }) => (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-charcoal-gray p-4 rounded-lg">
+            <h3 className="text-sm text-gray-400 mb-2">Total Tickets</h3>
+            <p className="text-2xl font-bold text-white">{userStats.totalTickets}</p>
+        </div>
+        <div className="bg-charcoal-gray p-4 rounded-lg">
+            <h3 className="text-sm text-gray-400 mb-2">Open Tickets</h3>
+            <p className="text-2xl font-bold text-orange-500">{userStats.openTickets}</p>
+        </div>
+        <div className="bg-charcoal-gray p-4 rounded-lg">
+            <h3 className="text-sm text-gray-400 mb-2">In Progress</h3>
+            <p className="text-2xl font-bold text-blue-500">{userStats.inProgressTickets}</p>
+        </div>
+        <div className="bg-charcoal-gray p-4 rounded-lg">
+            <h3 className="text-sm text-gray-400 mb-2">Resolved</h3>
+            <p className="text-2xl font-bold text-green-500">{userStats.resolvedTickets}</p>
+        </div>
     </div>
-  );
-}
-
+);
+  
 export default StatsRow;

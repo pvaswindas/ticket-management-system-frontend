@@ -1,56 +1,80 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import TicketTable from '@/components/user/table/TicketTable';
-import TabFilter from '@/components/user/table/TabFilter';
-import StatsRow from '@/components/user/dashboard/StatsRow';
+import TicketTable from '@/components/common/table/TicketTable';
+import TabFilter from '@/components/common/table/TabFilter';
 import Header from '@/components/user/dashboard/Header';
-import { fetchTickets } from '@/services/tickets/ticketServices';
+import { fetchTickets, retrieveStatsResponse } from '@/services/tickets/ticketServices';
+import StatsRow from '../../components/user/dashboard/StatsRow';
 
 function Dashboard() {
     const [tickets, setTickets] = useState([]);
+    const [userStats, setUserStats] = useState({
+        totalTickets: 0,
+        openTickets: 0,
+        inProgressTickets: 0,
+        resolvedTickets: 0
+    });
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('recent');
-    const [statusFilter, setStatusFilter] = useState('All');
     
     const pageSize = 5;
 
-    const loadTickets = useCallback(async () => {
+    const fetchUserStats = useCallback(async () => {
+        try {
+            const statsResponse = await retrieveStatsResponse();
+            setUserStats(statsResponse.data);
+        } catch (error) {
+            console.error('Error fetching user stats:', error);
+        }
+    }, []);
+
+    const fetchTicketsByTab = useCallback(async () => {
         setLoading(true);
         try {
-            const status = statusFilter !== 'All' ? statusFilter : null;
-            
-            const response = await fetchTickets({
-                status: status,
+            let filterStatus = null;
+            switch(activeTab) {
+                case 'open':
+                    filterStatus = 'open';
+                    break;
+                case 'in-progress':
+                    filterStatus = 'in-progress';
+                    break;
+                case 'resolved':
+                    filterStatus = 'resolved';
+                    break;
+                default:
+                    filterStatus = null;
+            }
+
+            const ticketsResponse = await fetchTickets({
+                status: filterStatus,
                 pageSize: pageSize
             });
             
-            setTickets(response.data.results);
+            setTickets(ticketsResponse.data.results);
         } catch (error) {
-            console.error('Error fetching tickets:', error)
+            console.error('Error fetching tickets:', error);
         } finally {
             setLoading(false);
         }
-    }, [statusFilter]);
+    }, [activeTab]);
 
     useEffect(() => {
-        loadTickets();
-    }, [statusFilter, loadTickets]);
+        fetchUserStats();
+    }, [fetchUserStats]);
 
+    useEffect(() => {
+        fetchTicketsByTab();
+    }, [fetchTicketsByTab]);
 
     const handleTabChange = (tab) => {
         setActiveTab(tab);
-        
-        if (tab === 'open') setStatusFilter('open');
-        else if (tab === 'in-progress') setStatusFilter('in-progress');
-        else if (tab === 'resolved') setStatusFilter('resolved');
-        else setStatusFilter('All');
     };
 
     return (
         <div className="text-white md:px-10 overflow-y-auto">
             <Header />
-            <StatsRow tickets={tickets} />
+            <StatsRow userStats={userStats} />
             
-            {/* Action Bar */}
             <TabFilter 
                 activeTab={activeTab} 
                 setActiveTab={handleTabChange} 

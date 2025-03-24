@@ -1,33 +1,22 @@
-import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import LoadingPage from '@/pages/common/LoadingPage';
 
 function ProtectedRoute({ children, adminAllowed = false }) {
     const { isAuthorized, isLoading, userStatus, role } = useAuth();
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!isLoading) {
-            if (!isAuthorized || userStatus === 'suspended') {
-                navigate('/login', { replace: true });
-                return;
-            }
-            
-            if (!adminAllowed && role === 'admin') {
-                navigate('/admin', { replace: true });
-                return;
-            }
-        }
-    }, [isAuthorized, isLoading, navigate, userStatus, role, adminAllowed]);
 
     if (isLoading) return <LoadingPage />;
 
-    const isAllowed = isAuthorized && 
-                     userStatus !== 'suspended' && 
-                     (adminAllowed || role !== 'admin');
-                     
-    return isAllowed ? children : null;
+    if (!isAuthorized || userStatus === 'suspended') {
+        return <Navigate to="/login" replace />;
+    }
+    
+    if (!adminAllowed && role === 'admin') {
+        return <Navigate to="/admin" replace />;
+    }
+
+    return children;
 }
 
 export default ProtectedRoute;

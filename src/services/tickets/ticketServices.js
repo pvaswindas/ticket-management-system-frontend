@@ -57,3 +57,8 @@ export const deleteTicket = async (ticketId) => {
   const response = await axiosInstance.delete(`tickets/${ticketId}/`);
 return response;
 }
+
+export const retrieveStatsResponse = async () => {
+  const response = await axiosInstance.get('tickets/user-stats/')
+  return response
+}

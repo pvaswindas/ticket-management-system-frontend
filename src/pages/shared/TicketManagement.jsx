@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import TabFilter from '@/components/user/table/TabFilter';
-import TicketTable from '@/components/user/table/TicketTable';
-import Pagination from '@/components/user/manage-tickets/Pagination';
+import TabFilter from '@/components/common/table/TabFilter';
+import TicketTable from '@/components/common/table/TicketTable';
+import Pagination from '@/components/common/manage-tickets/Pagination';
 import { fetchTickets } from '@/services/tickets/ticketServices';
 import AlertSnackbar from '@/components/AlertSnackbar';
 
-function TicketManagement() {
+function TicketManagement({ isAdmin=false }) {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('recent');
@@ -84,7 +84,8 @@ function TicketManagement() {
         <div className="bg-github rounded-lg shadow overflow-hidden">
           <TicketTable 
               tickets={tickets} 
-              loading={loading} 
+              loading={loading}
+              isAdmin={isAdmin}
           />
           
           {/* Pagination - styled to match table */}

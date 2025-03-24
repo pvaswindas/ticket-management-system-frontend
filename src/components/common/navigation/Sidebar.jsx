@@ -1,21 +1,27 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Logo from '../../Logo';
 import { LogOut } from 'lucide-react';
-import { useLocation, Link, useNavigate } from 'react-router-dom';
-import { logoutUser } from '@/services/auth/auth';
+import { useLocation, Link } from 'react-router-dom';
 import { getNavItems, getPageTitle } from '@/utils/pageNavUtils';
+import { useAuth } from '@/context/AuthContext';
 
 function Sidebar({ isAdmin = false }) {
-    const navigate = useNavigate();
+    const { logout } = useAuth();
     const location = useLocation();
 
 
-    const currentPage = getPageTitle({ location, isAdmin });
+    const currentPage = useMemo(() => 
+        getPageTitle({ location, isAdmin }), 
+        [location, isAdmin]
+    );
 
-    const navItems = getNavItems({ isAdmin })
+    const navItems = useMemo(() => 
+        getNavItems({ isAdmin }), 
+        [isAdmin]
+    );
 
     const handleLogout = () => {
-        logoutUser(navigate);
+        logout();
     };
 
     return (

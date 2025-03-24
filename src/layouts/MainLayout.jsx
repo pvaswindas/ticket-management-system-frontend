@@ -1,11 +1,11 @@
 import { Outlet } from "react-router-dom"
-import Sidebar from "../components/user/navigation/Sidebar"
+import Sidebar from "../components/common/navigation/Sidebar"
 import { useState, useEffect } from "react"
-import Navbar from "../components/user/navigation/Navbar"
+import Navbar from "../components/common/navigation/Navbar"
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"
-import { useAuth } from '@/hooks/useAuth';
-import BottomBar from "@/components/user/navigation/BottomBar"
+import { useAuth } from '@/context/AuthContext';
+import BottomBar from "@/components/common/navigation/BottomBar"
 
 function MainLayout() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)

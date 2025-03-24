@@ -2,13 +2,11 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import LoadingPage from "../pages/common/LoadingPage";
 import RestrictedRoute from "./RestrictedRoute";
-import AuthLayout from "../layouts/AuthLayout";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 import AdminOnlyRoute from "./AdminOnlyRoute";
 
 const LandingPage = lazy(() => import('@/pages/common/LandingPage'))
-
 const LoginPage = lazy(() => import('@/pages/auth/LoginPage'))
 
 const Dashboard = lazy(() => import('@/pages/user/Dashboard'))
@@ -20,39 +18,40 @@ const AdminDashboard = lazy(() => import('@/pages/admin/AdminDashboard'))
 const AddNewUser = lazy(() => import('@/pages/admin/AddNewUser'))
 const UserManagement = lazy(() => import('@/pages/admin/UserManagement'))
 
-
-
-
 const router = createBrowserRouter([
     {
-        
-        path: '/',
-        element: (
-            <Suspense fallback={<LoadingPage />} >
-                <RestrictedRoute>
-                    <LandingPage />
-                </RestrictedRoute>
-            </Suspense>
-        )
-    },
-    {
-        
         path: '/',
         element: (
             <RestrictedRoute>
-                <AuthLayout />
+                <LandingPage />
             </RestrictedRoute>
+        )
+    },
+    {
+        path: '/login',
+        element: (
+            <RestrictedRoute>
+                <LoginPage />
+            </RestrictedRoute>
+        )
+    },
+    {
+        path: '/dashboard',
+        element: (
+            <ProtectedRoute>
+                <MainLayout />
+            </ProtectedRoute>
         ),
         children: [
             {
-                path: 'login',
+                index: true,
                 element: (
-                    <Suspense fallback={<LoadingPage />} >
-                        <LoginPage />
+                    <Suspense fallback={<LoadingPage />}>
+                        <Dashboard />
                     </Suspense>
                 )
             },
-        ],
+        ]
     },
     {
         path: '/',
@@ -63,14 +62,6 @@ const router = createBrowserRouter([
         ),
         children: [
             {
-                path: 'dashboard',
-                element: (
-                    <Suspense fallback={<LoadingPage />}>
-                        <Dashboard />
-                    </Suspense>
-                )
-            },
-            {
                 path: 'create-tickets',
                 element: (
                     <Suspense fallback={<LoadingPage />}>
@@ -78,10 +69,31 @@ const router = createBrowserRouter([
                     </Suspense>
                 )
             },
+            {
+                path: 'tickets',
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <Suspense fallback={<LoadingPage />}>
+                                <TicketManagement />
+                            </Suspense>
+                        )
+                    },
+                    {
+                        path: ':id',
+                        element: (
+                            <Suspense fallback={<LoadingPage />}>
+                                <TicketDetail />
+                            </Suspense>
+                        )
+                    }
+                ]
+            }
         ]
     },
     {
-        path: '/admin/',
+        path: '/admin',
         element: (
             <AdminOnlyRoute>
                 <MainLayout />
@@ -89,9 +101,9 @@ const router = createBrowserRouter([
         ),
         children: [
             {
-                path: '',
+                index: true,
                 element: (
-                    <Suspense fallback={<LoadingPage />} >
+                    <Suspense fallback={<LoadingPage />}>
                         <AdminDashboard />
                     </Suspense>
                 )
@@ -99,7 +111,7 @@ const router = createBrowserRouter([
             {
                 path: 'create-user',
                 element: (
-                    <Suspense fallback={<LoadingPage />} >
+                    <Suspense fallback={<LoadingPage />}>
                         <AddNewUser />
                     </Suspense>
                 )
@@ -107,40 +119,35 @@ const router = createBrowserRouter([
             {
                 path: 'users',
                 element: (
-                    <Suspense fallback={<LoadingPage />} >
+                    <Suspense fallback={<LoadingPage />}>
                         <UserManagement />
                     </Suspense>
                 )
             },
-        ]
-    },
-    {
-        path: '/',
-        element: (
-            <ProtectedRoute adminAllowed={true} >
-                <MainLayout />
-            </ProtectedRoute>
-        ),
-        children: [
             {
                 path: 'tickets',
-                element: (
-                    <Suspense fallback={<LoadingPage />}>
-                        <TicketManagement />
-                    </Suspense>
-                )
-            },
-            {
-                path: 'tickets/:id',
-                element: (
-                    <Suspense fallback={<LoadingPage />}>
-                        <TicketDetail />
-                    </Suspense>
-                )
-            },
+                children: [
+                    {
+                        index: true,
+                        element: (
+                            <Suspense fallback={<LoadingPage />}>
+                                <TicketManagement isAdmin={true} />
+                            </Suspense>
+                        )
+                    },
+                    {
+                        path: ':id',
+                        element: (
+                            <Suspense fallback={<LoadingPage />}>
+                                <TicketDetail />
+                            </Suspense>
+                        )
+                    }
+                ]
+            }
         ]
     }
-])
+]);
 
 export function Routes() {
     return <RouterProvider router={router} />

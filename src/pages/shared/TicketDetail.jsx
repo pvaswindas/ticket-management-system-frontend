@@ -9,7 +9,7 @@ import TicketDetailHeader from '@/components/ticket-details/TicketDetailHeader';
 import TicketForm from '@/components/ticket-details/TicketForm';
 import TicketViewMode from '@/components/ticket-details/TicketViewMode';
 import TicketAssigneeForm from '@/components/ticket-details/TicketAssigneeForm';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/context/AuthContext';
 
 function TicketDetail() {
   const { id } = useParams();

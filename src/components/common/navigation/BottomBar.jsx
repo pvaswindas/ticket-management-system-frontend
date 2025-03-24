@@ -1,6 +1,6 @@
 import React from 'react'
 import { useLocation, Link } from 'react-router-dom';
-import { getNavItems, getPageTitle } from '../../../utils/pageNavUtils';
+import { getNavItems, getPageTitle } from '@/utils/pageNavUtils';
 
 function BottomBar({ isAdmin=false }) {
     const location = useLocation();

@@ -3,10 +3,9 @@ import { LayoutDashboard, LayoutGrid, CirclePlus, Tickets, Ticket, Users } from 
 export const getPageTitle = ({ location, isAdmin = false }) => {
     const path = location.pathname;
     
-    // For admin routes
     if (isAdmin || path.includes('/admin')) {
       if (path === '/admin/' || path === '/admin') return 'Dashboard';
-      if (path.includes('tickets')) return 'Ticket Management';
+      if (path.includes('/admin/tickets')) return 'Ticket Management';
       if (path.includes('/admin/create-user')) return 'Add New User';
       if (path.includes('/admin/users')) return 'User Management';
     } 
@@ -30,7 +29,7 @@ export const getNavItems = ({ isAdmin }) => {
 
     const adminNavItems = [
         { name: 'Dashboard', icon: () => <LayoutDashboard size={18} />, path: '/admin' },
-        { name: 'Ticket Management', icon: () => <Ticket size={18} />, path: '/tickets' },
+        { name: 'Ticket Management', icon: () => <Ticket size={18} />, path: '/admin/tickets' },
         { name: 'Add New User', icon: () => <CirclePlus size={18} />, path: '/admin/create-user' },
         { name: 'User Management', icon: () => <Users size={18} />, path: '/admin/users' },
     ];
