@@ -4,9 +4,13 @@ import TabFilter from '@/components/common/table/TabFilter';
 import Header from '@/components/user/dashboard/Header';
 import { fetchTickets, retrieveStatsResponse } from '@/services/tickets/ticketServices';
 import StatsRow from '../../components/user/dashboard/StatsRow';
+import AlertSnackbar from '@/components/AlertSnackbar';
 
 function Dashboard() {
     const [tickets, setTickets] = useState([]);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarErrorType, setSnackbarErrorType] = useState("error");
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [userStats, setUserStats] = useState({
         totalTickets: 0,
         openTickets: 0,
@@ -22,8 +26,10 @@ function Dashboard() {
         try {
             const statsResponse = await retrieveStatsResponse();
             setUserStats(statsResponse.data);
-        } catch (error) {
-            console.error('Error fetching user stats:', error);
+        } catch {
+            setSnackbarMessage("Failed to fetching user stats!")
+            setSnackbarErrorType("error")
+            setSnackbarOpen(true)
         }
     }, []);
 
@@ -51,8 +57,10 @@ function Dashboard() {
             });
             
             setTickets(ticketsResponse.data.results);
-        } catch (error) {
-            console.error('Error fetching tickets:', error);
+        } catch {
+            setSnackbarMessage("Failed to fetch tickets!")
+            setSnackbarErrorType("error")
+            setSnackbarOpen(true)
         } finally {
             setLoading(false);
         }
@@ -72,6 +80,12 @@ function Dashboard() {
 
     return (
         <div className="text-white md:px-10 overflow-y-auto">
+            <AlertSnackbar
+                open={snackbarOpen}
+                message={snackbarMessage}
+                alert_type={snackbarErrorType}
+                onClose={() => setSnackbarOpen(false)}
+            />
             <Header />
             <StatsRow userStats={userStats} />
             

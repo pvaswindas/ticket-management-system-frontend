@@ -17,9 +17,9 @@ function TicketDetail() {
   const isAdmin = role === 'admin' ? true : false
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarErrorType, setSnackbarErrorType] = useState("error");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarErrorType, setSnackbarErrorType] = useState("error");
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [isAssigning, setIsAssigning] = useState(false);
@@ -161,12 +161,11 @@ function TicketDetail() {
       await deleteTicket(id);
       sessionStorage.setItem('ticketDeletedMessage', `Ticket #${id} was successfully deleted`);
       navigate('/tickets');
-    } catch (error) {
+    } catch {
       setDeleteInProgress(false);
       setSnackbarMessage("Failed to delete the ticket!")
       setSnackbarErrorType("error")
       setSnackbarOpen(true)
-      console.error('Error deleting ticket:', error);
     }
   }
 

@@ -51,8 +51,7 @@ export const useDashboardData = () => {
       setUserData(usersResponse.data);
 
       setLoading(false);
-    } catch (err) {
-      console.error("Error fetching dashboard data:", err);
+    } catch {
       setError("Failed to load dashboard data. Please try again.");
       setLoading(false);
     }

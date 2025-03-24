@@ -16,8 +16,6 @@ export function AuthProvider({ children }) {
     const logout = useCallback(async () => {
         try {
             await axiosInstance.post('auth/logout/');
-        } catch (error) {
-            console.error('Logout error:', error);
         } finally {
             localStorage.removeItem('ACCESS_TOKEN');
             localStorage.removeItem('REFRESH_TOKEN');
@@ -34,7 +32,7 @@ export function AuthProvider({ children }) {
     const checkUserStatus = useCallback(async () => {
         const token = localStorage.getItem('ACCESS_TOKEN');
         if (!token) return false;
-
+    
         try {
             const response = await axiosInstance.get('auth/status/');
             if (response.data.status === 'suspended') {
@@ -54,6 +52,7 @@ export function AuthProvider({ children }) {
             }));
             return true;
         } catch {
+            await logout();
             return false;
         }
     }, [logout]);
@@ -156,7 +155,6 @@ export function AuthProvider({ children }) {
             
             return { success: true, role };
         } catch (error) {
-            console.log(error)
             return { 
                 success: false, 
                 error: error.response?.data?.error || { non_field_errors: ['Login failed'] }
