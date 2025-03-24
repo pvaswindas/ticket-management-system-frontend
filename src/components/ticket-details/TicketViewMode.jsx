@@ -9,7 +9,8 @@ const TicketViewMode = ({
   onEdit, 
   onDelete, 
   onResolve, 
-  deleteInProgress 
+  deleteInProgress,
+  isAdmin=false
 }) => {
   return (
     <>
@@ -32,6 +33,7 @@ const TicketViewMode = ({
           onDelete={onDelete}
           onResolve={onResolve}
           deleteInProgress={deleteInProgress}
+          isAdmin={isAdmin}
         />
       </div>
       

@@ -162,7 +162,7 @@ const LoginPage = () => {
 
           <motion.button
             type="submit"
-            className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md py-3 transition duration-300 ease-in-out"
+            className="w-full bg-white/10 hover:bg-white/20 text-white/80 hover:text-white rounded-md py-3 my-4 transition duration-300 ease-in-out"
             variants={itemVariants}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
@@ -181,14 +181,14 @@ const LoginPage = () => {
             )}
           </motion.button>
           
-          <motion.div 
+          {/* <motion.div 
             className="text-center mt-4 text-sm text-white"
             variants={itemVariants}
           >
             <a href="#" className="hover:text-white transition duration-300">
               Forgot password?
             </a>
-          </motion.div>
+          </motion.div> */}
         </form>
       </motion.div>
     </motion.div>

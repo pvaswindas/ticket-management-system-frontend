@@ -20,8 +20,8 @@ const RecentTicketsTable = ({ tickets }) => {
                 <td className="px-4 py-3 whitespace-nowrap text-sm">{ticket.title}</td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${
-                    ticket.priority === 'high' ? 'bg-hunter-green text-white' :
-                    ticket.priority === 'medium' ? 'bg-pine-green text-white' :
+                    ticket.priority === 'high' ? 'bg-red-800 text-white' :
+                    ticket.priority === 'medium' ? 'bg-amber-600 text-white' :
                     'bg-persian-green text-white'
                   }`}>
                     {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)}
@@ -29,9 +29,9 @@ const RecentTicketsTable = ({ tickets }) => {
                 </td>
                 <td className="px-4 py-3 whitespace-nowrap text-sm">
                   <span className={`px-2 py-1 text-xs rounded-full ${
-                    ticket.status === 'open' ? 'bg-deep-teal text-white' :
-                    ticket.status === 'in-progress' ? 'bg-jungle-green text-white' :
-                    'bg-tropical-rainforest text-white'
+                    ticket.status === 'open' ? 'bg-yellow-500 text-white' :
+                    ticket.status === 'in-progress' ? 'bg-indigo-500 text-white' :
+                    'bg-pine-green text-white'
                   }`}>
                     {ticket.status.charAt(0).toUpperCase() + ticket.status.slice(1)}
                   </span>

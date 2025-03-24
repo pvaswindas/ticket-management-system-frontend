@@ -4,11 +4,14 @@ import { useState, useEffect } from "react"
 import Navbar from "../components/user/navigation/Navbar"
 // eslint-disable-next-line no-unused-vars
 import { motion, AnimatePresence } from "framer-motion"
-import BottomBar from "../components/user/navigation/BottomBar"
+import { useAuth } from '@/hooks/useAuth';
+import BottomBar from "@/components/user/navigation/BottomBar"
 
 function MainLayout() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(true)
     const [isLargeScreen, setIsLargeScreen] = useState(false)
+    const { role } = useAuth();
+    const isAdmin = role === 'admin' ? true : false
 
     useEffect(() => {
       const checkScreenSize = () => {
@@ -34,7 +37,7 @@ function MainLayout() {
               exit={{ x: -300, opacity: 0 }}
               transition={{ duration: 0.3, ease: "easeInOut" }}
             >
-              <Sidebar />
+              <Sidebar isAdmin={isAdmin} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -46,7 +49,7 @@ function MainLayout() {
           }}
         >
           <div className="p-6">
-            <Navbar setIsSidebarOpen={setIsSidebarOpen} />
+            <Navbar setIsSidebarOpen={setIsSidebarOpen} isAdmin={isAdmin} />
             <div className="py-2 pb-20 md:pb-6">
               <Outlet />
             </div>
@@ -54,7 +57,7 @@ function MainLayout() {
         </div>
         
         <div className="fixed bottom-0 left-0 w-full lg:hidden z-30">
-          <BottomBar />
+          <BottomBar isAdmin={isAdmin} />
         </div>
       </div>
     )

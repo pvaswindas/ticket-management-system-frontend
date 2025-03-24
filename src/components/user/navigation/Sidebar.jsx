@@ -3,7 +3,7 @@ import Logo from '../../Logo';
 import { LogOut } from 'lucide-react';
 import { useLocation, Link, useNavigate } from 'react-router-dom';
 import { logoutUser } from '@/services/auth/auth';
-import { getNavItems, getPageTitle } from '../../../utils/pageNavUtils';
+import { getNavItems, getPageTitle } from '@/utils/pageNavUtils';
 
 function Sidebar({ isAdmin = false }) {
     const navigate = useNavigate();

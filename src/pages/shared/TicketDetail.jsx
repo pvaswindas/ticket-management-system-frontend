@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { fetchTickets, editTicket, closeTicket, deleteTicket } from '@/services/tickets/ticketServices';
+import { fetchTickets, editTicket, closeTicket, deleteTicket, assignTicket } from '@/services/tickets/ticketServices';
 import AlertSnackbar from '@/components/AlertSnackbar';
 import LoadingState from '@/components/ticket-details/LoadingState';
 import NotFoundState from '@/components/ticket-details/NotFoundState';
 import TicketDetailHeader from '@/components/ticket-details/TicketDetailHeader';
 import TicketForm from '@/components/ticket-details/TicketForm';
 import TicketViewMode from '@/components/ticket-details/TicketViewMode';
+import TicketAssigneeForm from '@/components/ticket-details/TicketAssigneeForm';
+import { useAuth } from '@/hooks/useAuth';
 
 function TicketDetail() {
   const { id } = useParams();
+  const { role } = useAuth();
+  const isAdmin = role === 'admin' ? true : false
   const navigate = useNavigate();
   const [ticket, setTicket] = useState(null);
   const [snackbarMessage, setSnackbarMessage] = useState("");
@@ -18,14 +22,30 @@ function TicketDetail() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAssigning, setIsAssigning] = useState(false);
   const [deleteInProgress, setDeleteInProgress] = useState(false);
   
-  // Setup React Hook Form
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+  const { 
+    register, 
+    handleSubmit, 
+    reset, 
+    formState: { errors } 
+  } = useForm({
     defaultValues: {
       title: '',
       description: '',
       priority: 'low'
+    }
+  });
+
+  const { 
+    register: registerAssignee, 
+    handleSubmit: handleSubmitAssignee, 
+    formState: { errors: assigneeErrors },
+    reset: resetAssignee
+  } = useForm({
+    defaultValues: {
+      assigned_to: ''
     }
   });
 
@@ -36,32 +56,51 @@ function TicketDetail() {
         const response = await fetchTickets({ ticketId: id });
         const data = response.data;
         setTicket(data);
+        
         reset({
           title: data.title,
           description: data.description,
           priority: data.priority
         });
-      } catch (error) {
-        console.error('Error fetching ticket details:', error);
+        
+        resetAssignee({
+          assigned_to: data.assigned_to || ''
+        });
+      } catch {
+        setSnackbarMessage("Failed to fetch ticket!")
+        setSnackbarErrorType("error")
+        setSnackbarOpen(true)
       } finally {
         setLoading(false);
       }
     };
     
     fetchTicket();
-  }, [id, reset]);
+  }, [id, reset, resetAssignee]);
 
   const handleEdit = () => {
-    setIsEditing(true);
+    if (!isAdmin) {
+      setIsEditing(true);
+    } else {
+      setIsAssigning(true)
+    }
   };
 
   const handleCancel = () => {
     setIsEditing(false);
-    reset({
-      title: ticket.title,
-      description: ticket.description,
-      priority: ticket.priority
-    });
+    setIsAssigning(false);
+    
+    if (isEditing) {
+      reset({
+        title: ticket.title,
+        description: ticket.description,
+        priority: ticket.priority
+      });
+    } else if (isAssigning) {
+      resetAssignee({
+        assigned_to: ticket.assigned_to || ''
+      });
+    }
   };
 
   const onSubmit = async (data) => {
@@ -79,6 +118,24 @@ function TicketDetail() {
       setSnackbarOpen(true)
     } catch {
       setSnackbarMessage("Failed to make changes!")
+      setSnackbarErrorType("error")
+      setSnackbarOpen(true)
+    }
+  };
+
+  const onAssignSubmit = async (data) => {
+    try {
+      const response = await assignTicket(id, {
+        assigned_to: data.assigned_to
+      });
+      
+      setTicket(response.data);
+      setIsAssigning(false);
+      setSnackbarMessage("Successfully assigned the ticket!")
+      setSnackbarErrorType("success")
+      setSnackbarOpen(true)
+    } catch {
+      setSnackbarMessage("Failed to assign the ticket!")
       setSnackbarErrorType("error")
       setSnackbarOpen(true)
     }
@@ -144,13 +201,21 @@ function TicketDetail() {
       <TicketDetailHeader onBack={() => navigate('/tickets')} />
       
       <div className="bg-charcoal-gray rounded-lg shadow overflow-hidden p-6">
-        {isEditing ? (
+      {isEditing ? (
           <TicketForm 
             register={register}
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             onCancel={handleCancel}
             errors={errors}
+          />
+        ) : isAssigning ? (
+          <TicketAssigneeForm 
+            register={registerAssignee}
+            handleSubmit={handleSubmitAssignee}
+            onSubmit={onAssignSubmit}
+            onCancel={handleCancel}
+            errors={assigneeErrors}
           />
         ) : (
           <TicketViewMode 
@@ -160,6 +225,7 @@ function TicketDetail() {
             onDelete={handleDelete}
             onResolve={handleResolve}
             deleteInProgress={deleteInProgress}
+            isAdmin={isAdmin}
           />
         )}
       </div>

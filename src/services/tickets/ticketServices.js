@@ -41,6 +41,11 @@ export const editTicket = async (ticketId, ticketData) => {
     return response;
 };
 
+export const assignTicket = async (ticketId, ticketData) => {
+  const response = await axiosInstance.patch(`tickets/${ticketId}/`, ticketData);
+  return response;
+}
+
 export const closeTicket = async (ticketId) => {
     const response = await axiosInstance.patch(`tickets/${ticketId}/`, {
         'status': 'resolved'

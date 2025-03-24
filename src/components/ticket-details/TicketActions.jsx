@@ -1,6 +1,6 @@
 import React from 'react';
 
-const TicketActions = ({ status, onEdit, onDelete, onResolve, deleteInProgress }) => {
+const TicketActions = ({ status, onEdit, onDelete, onResolve, deleteInProgress, isAdmin=false }) => {
   if (status === 'resolved') {
     return null;
   }
@@ -9,12 +9,21 @@ const TicketActions = ({ status, onEdit, onDelete, onResolve, deleteInProgress }
     <div className="mt-4 md:mt-0 flex flex-col gap-2">
       {status === 'open' && (
         <div className="flex gap-2 items-center">
-          <button
-            onClick={onEdit}
-            className="px-4 py-2 bg-jungle-green hover:bg-dark-jungle-green rounded-md text-sm"
-          >
-            Edit Ticket
-          </button>
+          {!isAdmin ? (
+            <button
+              onClick={onEdit}
+              className="px-4 py-2 bg-jungle-green hover:bg-dark-jungle-green rounded-md text-sm"
+            >
+              Edit Ticket
+            </button>
+          ) : (
+            <button
+              onClick={onEdit}
+              className="px-4 py-2 bg-jungle-green hover:bg-dark-jungle-green rounded-md text-sm"
+            >
+              Assign Work
+            </button>
+          )}
           <button
             onClick={onDelete}
             disabled={deleteInProgress}

@@ -3,9 +3,9 @@ import TabFilter from '@/components/user/table/TabFilter';
 import TicketTable from '@/components/user/table/TicketTable';
 import Pagination from '@/components/user/manage-tickets/Pagination';
 import { fetchTickets } from '@/services/tickets/ticketServices';
-import AlertSnackbar from '../../components/AlertSnackbar';
+import AlertSnackbar from '@/components/AlertSnackbar';
 
-function ManageTickets() {
+function TicketManagement() {
     const [tickets, setTickets] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('recent');
@@ -50,8 +50,10 @@ function ManageTickets() {
           setTickets(response.data.results);
           setLinkToPrevious(response.data.previous);
           setLinkToNext(response.data.next);
-        } catch (error) {
-          console.error('Error fetching tickets:', error);
+        } catch {
+          setSnackbarMessage("Failed to fetch tickets!");
+          setSnackbarErrorType("error");
+          setSnackbarOpen(true);
         } finally {
           setLoading(false);
         }
@@ -96,4 +98,4 @@ function ManageTickets() {
     );
 }
 
-export default ManageTickets;
+export default TicketManagement;

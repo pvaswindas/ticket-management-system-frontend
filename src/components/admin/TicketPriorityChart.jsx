@@ -15,7 +15,6 @@ const TicketPriorityChart = ({ lowPriority, mediumPriority, highPriority }) => {
           size: '70%'
         },
         expandOnClick: false,
-        // This is the key setting for creating gaps
         dataLabels: {
           offset: 0,
         }
