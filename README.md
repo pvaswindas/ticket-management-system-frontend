@@ -94,6 +94,6 @@ src/
 5. Open Pull Request
 
 ## 📧 Contact
-- **Aswin Das P V**
-- **Email:** pvaswindas.dev@gmail.com
-- **LinkedIn:** [pvaswindas](https://www.linkedin.com/in/pvaswindas/)
+**Aswin Das P V**
+**Email:** pvaswindas.dev@gmail.com
+**LinkedIn:** [pvaswindas](https://www.linkedin.com/in/pvaswindas/)
