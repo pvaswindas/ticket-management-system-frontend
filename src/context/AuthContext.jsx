@@ -15,7 +15,8 @@ export function AuthProvider({ children }) {
 
     const logout = useCallback(async () => {
         try {
-            await axiosInstance.post('auth/logout/');
+            const refresh = localStorage.getItem('REFRESH_TOKEN');
+            await axiosInstance.options('auth/logout', refresh);
         } finally {
             localStorage.removeItem('ACCESS_TOKEN');
             localStorage.removeItem('REFRESH_TOKEN');
