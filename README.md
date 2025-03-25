@@ -1,7 +1,7 @@
 # 🎫 Simple Ticket Management System - Frontend
 
-![Ticsol Landing Preview](/images/ticsol-landing-preview.png)
-![Ticsol Dashboard Preview](/images/ticsol-user-dashboard-preview.png)
+![Ticsol Landing Preview](/public/images/ticsol-landing-preview.png)
+![Ticsol Dashboard Preview](/public/images/ticsol-user-dashboard-preview.png)
 
 ## 🚀 Project Overview
 A modern React-based ticket management system frontend built with Vite.
