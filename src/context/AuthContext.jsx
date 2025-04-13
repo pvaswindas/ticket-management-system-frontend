@@ -16,7 +16,11 @@ export function AuthProvider({ children }) {
     const logout = useCallback(async () => {
         try {
             const refresh = localStorage.getItem('REFRESH_TOKEN');
-            await axiosInstance.options('auth/logout', refresh);
+            if (refresh) {
+                await axiosInstance.options('auth/logout', refresh);
+            }
+        } catch (error) {
+            console.error("Logout error:", error);
         } finally {
             localStorage.removeItem('ACCESS_TOKEN');
             localStorage.removeItem('REFRESH_TOKEN');
@@ -29,13 +33,13 @@ export function AuthProvider({ children }) {
         }
     }, []);
 
-
     const checkUserStatus = useCallback(async () => {
         const token = localStorage.getItem('ACCESS_TOKEN');
         if (!token) return false;
     
         try {
             const response = await axiosInstance.get('auth/status/');
+            
             if (response.data.status === 'suspended') {
                 await logout();
                 setAuthState(prev => ({
@@ -52,71 +56,52 @@ export function AuthProvider({ children }) {
                 role: response.data.role
             }));
             return true;
-        } catch {
-            await logout();
+        } catch (error) {
+            // Let axios interceptor handle auth errors
+            if (!error.response || error.response.status !== 401) {
+                console.error("Status check error:", error);
+            }
             return false;
         }
     }, [logout]);
 
-
-    const refreshAccessToken = useCallback(async () => {
-        const refreshToken = localStorage.getItem('REFRESH_TOKEN');
-        if (!refreshToken) return false;
-
-        try {
-            const res = await axiosInstance.post('auth/token/refresh/', { refresh: refreshToken });
-            localStorage.setItem('ACCESS_TOKEN', res.data.access);
-            localStorage.setItem('REFRESH_TOKEN', res.data.refresh);
-            
-            const statusOk = await checkUserStatus();
-            setAuthState(prev => ({
-                ...prev,
-                isAuthorized: statusOk
-            }));
-            return statusOk;
-        } catch {
-            await logout();
-            return false;
-        }
-    }, [checkUserStatus, logout]);
-
-
-    const validateAccessToken = useCallback(async () => {
+    const validateToken = useCallback(async () => {
         const token = localStorage.getItem('ACCESS_TOKEN');
         if (!token) return false;
-
+    
         try {
             const decoded = jwtDecode(token);
             const now = Math.floor(Date.now() / 1000);
             
-            if (decoded.exp < now) {
-                return await refreshAccessToken();
+            // Check if token is expired
+            if (decoded.exp && decoded.exp < now) {
+                console.log("Token expired, will rely on interceptor for refresh");
+                return false;
             }
             
             return await checkUserStatus();
         } catch {
             return false;
         }
-    }, [refreshAccessToken, checkUserStatus]);
-
+    }, [checkUserStatus]);
     
     const refreshAuthState = useCallback(async () => {
         setAuthState(prev => ({ ...prev, isLoading: true }));
-        const isValid = await validateAccessToken();
+        const isValid = await validateToken();
         setAuthState(prev => ({ 
             ...prev, 
             isAuthorized: isValid,
             isLoading: false
         }));
         return isValid;
-    }, [validateAccessToken]);
+    }, [validateToken]);
 
-
+    // Set up authentication state and event listeners
     useEffect(() => {
         let isMounted = true;
         
-        (async () => {
-            const isValid = await validateAccessToken();
+        // Initial auth check
+        validateToken().then(isValid => {
             if (isMounted) {
                 setAuthState(prev => ({
                     ...prev,
@@ -124,24 +109,34 @@ export function AuthProvider({ children }) {
                     isLoading: false
                 }));
             }
-        })();
+        });
 
-        const intervalId = setInterval(async () => {
+        // Listen for logout events from axios interceptor
+        const handleLogout = () => {
             if (isMounted) {
-                await checkUserStatus();
+                logout();
+            }
+        };
+        
+        window.addEventListener('auth:logout', handleLogout);
+
+        // Periodic status check
+        const statusInterval = setInterval(() => {
+            if (isMounted) {
+                checkUserStatus();
             }
         }, 5 * 60 * 1000);
 
         return () => {
             isMounted = false;
-            clearInterval(intervalId);
+            clearInterval(statusInterval);
+            window.removeEventListener('auth:logout', handleLogout);
         };
-    }, [validateAccessToken, checkUserStatus]);
-
+    }, [validateToken, checkUserStatus, logout]);
 
     const login = useCallback(async (credentials) => {
         try {
-            const response = await loginUser(credentials)
+            const response = await loginUser(credentials);
             const { access, refresh, role } = response.data;
             
             localStorage.setItem('ACCESS_TOKEN', access);
