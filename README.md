@@ -1,99 +1,74 @@
-# 🎫 Simple Ticket Management System - Frontend
+# TicSol — Ticket Management System Frontend
 
-![Ticsol Landing Preview](/public/images/ticsol-landing-preview.png)
-![Ticsol Dashboard Preview](/public/images/ticsol-user-dashboard-preview.png)
+A single-page application (SPA) for support ticket tracking and user administration, built with React 19, Vite, and Tailwind CSS.
 
-## 🚀 Project Overview
-A modern React-based ticket management system frontend built with Vite.
+---
 
-## 💻 Tech Stack
-### Core Libraries
-- React 19
-- React DOM 19
-- Vite 6.2.2
+## Technical Stack
 
-### Routing
-- React Router DOM 7.4.0
+- **Core & Runtime**: React 19.0.0, React DOM 19.0.0, Vite 6.2.2
+- **Routing**: React Router DOM 7.4.0
+- **State & Networking**: Axios 1.8.4, JWT Decode 4.0.0, React Context API
+- **Form Handling & Validation**: React Hook Form 7.54.2, Zod 3.24.2 (`@hookform/resolvers` 4.1.3)
+- **UI & Styling**: Tailwind CSS 4.0.15 (`@tailwindcss/vite`), Material-UI 6.4.8, Emotion 11.14.0, Framer Motion 12.5.0, Lucide React 0.483.0
+- **Data Visualization**: React ApexCharts 1.7.0
 
-### State Management & Forms
-- React Hook Form 7.54.2
-- Zod (Validation) 3.24.2
-- JWT Decode 4.0.0
+---
 
-### UI & Styling
-- Tailwind CSS 4.0.15
-- Material-UI (MUI) 6.4.8
-- Lucide React (Icons) 0.483.0
-- Framer Motion (Animations) 12.5.0
+## Quick Start
 
-### Additional Libraries
-- Axios (HTTP Requests) 1.8.4
-- ApexCharts (Charting) 1.7.0
-- CLSX (Conditional Classnames) 2.1.1
-
-## 🛠️ Prerequisites
-- Node.js 18+ 
+### Prerequisites
+- Node.js 18+
 - npm 9+
 
-## 🚀 Getting Started
+### Installation & Environment Setup
 
-### Installation
+1. **Clone the repository & install dependencies**:
+   ```bash
+   git clone <repository-url>
+   cd ticsol_frontend
+   npm install
+   ```
+
+2. **Configure environment variables**:
+   Create a `.env` file in the root directory:
+   ```env
+   VITE_API_BASE_URL=http://localhost:8000/api/
+   ```
+
+### Development Scripts
+
 ```bash
-# Clone the repository
-git clone https://your-repo-url.git
-cd client
-
-# Install dependencies
-npm install
-```
-
-### Environment Setup
-1. Create `.env` file
-2. Add necessary environment variables:
-```
-VITE_API_BASE_URL=http://your-backend-url/
-```
-
-### Development
-```bash
-# Run development server
+# Start local development server
 npm run dev
-# Opens at http://localhost:5173
 
-# Build for production
-npm run build
-
-# Lint the project
+# Run ESLint check
 npm run lint
 
-# Preview production build
+# Build production bundle
+npm run build
+
+# Preview production build locally
 npm run preview
 ```
 
-## 📂 Project Structure
+---
+
+## Project Structure
+
 ```
 src/
-├── components/
-├── pages/
-├── services/
-├── utils/
-├── contexts/
-└── App.jsx
+├── components/     # UI components (Admin, Common, Landing, Ticket Details, User)
+├── context/        # Global AuthContext & JWT session handling
+├── hooks/          # Custom hooks (useDashboardData, useLogout)
+├── layouts/        # Application shell layout (MainLayout)
+├── pages/          # Views (Admin, Auth, Common, Shared, User)
+├── routes/         # Router configuration & route guards
+├── services/       # Axios instance & REST API service clients
+└── utils/          # Navigation helpers and date formatters
 ```
 
-## 🌐 Deployment
-- Configured for Vercel
-- Build Command: `npm run build`
-- Output Directory: `dist`
+---
 
-## 🤝 Contributing
-1. Fork the repository
-2. Create feature branch
-3. Commit changes
-4. Push to branch
-5. Open Pull Request
-
-## 📧 Contact
-**Aswin Das P V**  
-**Email:** pvaswindas.dev@gmail.com  
-**LinkedIn:** [pvaswindas](https://www.linkedin.com/in/pvaswindas/)  
+## License & Author
+- **Author**: Aswin Das P V
